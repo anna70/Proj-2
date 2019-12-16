@@ -1,0 +1,150 @@
+
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>How I spend my time</title>
+    <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'>
+    <style media="screen">
+      
+
+      body {
+        background: #ffffff;
+      }
+
+
+      #title{
+             
+              font-family:Helvetica;
+              color:#ffd700;
+              width:100%;
+              text-align:center;
+              top:1%;
+              font-size:20pt;
+	      font-weight:bold;
+	      text-decoration:underline;
+            }
+      #sub{
+
+              
+              font-family:TimesNewRoman;
+              color:#000000;
+              width:80%;
+	      padding:2% 10% 0 10%;
+              font-size:14pt;}
+
+ #chartdiv {
+  width: 100%;
+  height: 600px;
+  margin: 1% 0% 0% 0%;}
+
+    </style>
+
+  </head>
+  <body>
+    <div id="title" >2016 Summer Olympics</div>
+<div id="sub"> Here is a chart representing the number gold medals won by each country in the 2016 Summer Olympics. The United States won almost double the amount of gold medals compared to the other competing countries with the United Kingdom only beating China by one. Athletes from 59 nations earned gold medals at these Olympics also breaking the record for the most number of nations winning gold at a single Olympic Games. </div>  
+
+
+<style>
+#chartdiv {
+  width: 100%;
+  height: 500px;
+}
+</style>
+
+<!-- Resources -->
+<script src="https://www.amcharts.com/lib/4/core.js"></script>
+<script src="https://www.amcharts.com/lib/4/charts.js"></script>
+<script src="https://www.amcharts.com/lib/4/themes/animated.js"></script>
+
+<!-- Chart code -->
+<script>
+am4core.ready(function() {
+
+// Themes begin
+am4core.useTheme(am4themes_animated);
+// Themes end
+
+var chart = am4core.create("chartdiv", am4charts.XYChart);
+chart.hiddenState.properties.opacity = 0; // this creates initial fade-in
+
+chart.data = [
+  {
+    country: "United States",
+    visits: 46
+  },
+  {
+    country: "United Kingdom",
+    visits: 27
+  },  
+  {
+    country: "China",
+    visits: 26
+  },
+  {
+    country: "Russia",
+    visits: 19
+  },
+  {
+    country: "Germany",
+    visits: 17
+  },
+  ];
+
+var categoryAxis = chart.xAxes.push(new am4charts.CategoryAxis());
+categoryAxis.renderer.grid.template.location = 0;
+categoryAxis.dataFields.category = "country";
+categoryAxis.renderer.minGridDistance = 20;
+categoryAxis.fontSize = 11;
+categoryAxis.renderer.labels.template.dy = 5;
+
+
+
+var image = new am4core.Image();
+image.horizontalCenter = "middle";
+image.width = 20;
+image.height = 20;
+image.verticalCenter = "middle";
+image.adapter.add("href", (href, target)=>{
+  let category = target.dataItem.category;
+  if(category){
+    return "https://www.amcharts.com/wp-content/uploads/flags/" + category.split(" ").join("-").toLowerCase() + ".svg";
+  }
+  return href;
+})
+categoryAxis.dataItems.template.bullet = image;
+
+
+
+var valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
+valueAxis.min = 0;
+valueAxis.renderer.minGridDistance = 30;
+valueAxis.renderer.baseGrid.disabled = true;
+
+
+var series = chart.series.push(new am4charts.ColumnSeries());
+series.dataFields.categoryX = "country";
+series.dataFields.valueY = "visits";
+series.columns.template.tooltipText = "{valueY.value}";
+series.columns.template.tooltipY = 0;
+series.columns.template.strokeOpacity = 0;
+
+// as by default columns of the same series are of the same color, we add adapter which takes colors from chart.colors color set
+series.columns.template.adapter.add("fill", function(fill, target) {
+  return chart.colors.getIndex(target.dataItem.index);
+});
+
+}); // end am4core.ready()
+</script>
+
+<!-- HTML -->
+<div id="chartdiv"></div>
+</script>
+
+<!-- HTML -->
+
+
+  </body>
+</html>
